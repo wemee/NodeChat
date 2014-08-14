@@ -3,6 +3,7 @@ var fs = require('fs');
 function create(server){
 	var io = require('socket.io').listen(server);
 	var msg_queue = [];
+	var users = {};
 
 	var slimMsg = function(){
   	if(msg_queue.length > 20){
@@ -22,12 +23,15 @@ function create(server){
 
 	io.sockets.on('connection', function(socket) {
 	  console.log("A user connected, socket id: " + socket.id);
+	  users[socket.id] = socket.handshake.address.address;
+	  console.log(users);
 
 	  slimMsg();
 	  emitAllMsgTo(socket);
 
 	  socket.on('disconnect', function () {
 	    console.log("A user disconnect, socket id: " + socket.id);
+	    delete users[socket.id];
 	  });
 
 	  socket.on('echo_post', function(name, data){
