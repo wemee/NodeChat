@@ -1,0 +1,54 @@
+<html ng-app="chat">
+<head>
+    <meta charset="utf-8">
+    <title>秘密基地</title>
+    <style>
+        #chatPanel-div {
+            font-size: 12px;
+            border-radius: 10px;
+            border: solid 1px #336699;
+            padding: 15px 15px 15px 15px;
+            line-height: 20px;
+            max-width: 400px;
+            max-height: 200px;
+            overflow: auto;
+        }
+        #chat_window {
+          position:fixed;
+          bottom:0;
+          right:0;
+        }
+        /*.ng-invalid.ng-dirty{
+          border-color: red;
+        }
+        
+        .ng-valid.ng-dirty{
+          border-color: green;
+        }*/
+    </style>
+
+    <!-- <script src='//code.jquery.com/jquery-2.1.0.min.js'></script> -->
+    <script src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js'></script>
+    <script src='//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-sanitize.js'></script>
+    <script src='/socket.io/socket.io.js'></script>
+    
+    <script src='cookies.js'></script>
+    <script src='script.js'></script>
+</head>
+  
+<body ng-controller="MainController">
+  <iframe src="http://ess.leosys.com/" onload="this.width=screen.width;this.height=screen.height;" style="border:0px"></iframe>
+
+  <div id="chat_window">
+    <div id="chatPanel-div" ng-init="chatPanelDiv='chatPanel-div'" ng-bind-html="chatPanel"></div>
+    <form ng-submit="setNickName()">
+      你的暱稱: <input type="text" ng-model="nickName" placeholder="在此輸入暱稱" />
+    </form>
+    <form name="chatForm" ng-submit="chatForm.$valid && talk()"><!-- novalidate -->
+      <input type="text" size="55" ng-model="chat" placeholder="在此輸入訊息" required>
+      <input type="submit" value="送出">
+    </form>
+  </div>
+  
+</body>
+</html>
