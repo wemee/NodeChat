@@ -9,7 +9,7 @@
 
   var app = angular.module('chat', ["ngSanitize"]);
 
-  app.value("socket", io.connect('http://10.0.21.67:8081/'));
+  app.value("socket", io.connect('http://10.0.21.67:8080/'));
 
   app.factory('onblurBlinkCtr', [function() {
     var onblurBlinkCtr = {};
@@ -26,10 +26,10 @@
       is_onblur : false,
       newExcitingAlerts : (function () {
         var oldTitle = document.title;
-        var msg = "有新訊息";
+        var msg = "ESS系統";
         var timeoutId;
         var blink = function() {
-          document.title = document.title == msg ? ' ' : msg;
+          document.title = document.title == msg ? oldTitle : msg;
         };
 
         var oldOnfocusFunc = window.onfocus;
@@ -44,7 +44,7 @@
 
         return function () {
           if (!timeoutId) {
-            timeoutId = setInterval(blink, 800);
+            timeoutId = setInterval(blink, 1500);
             window.onfocus = clear;
           }
         };

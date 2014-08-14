@@ -31,12 +31,12 @@ function create(server){
 	  });
 
 
-	  setInterval(function(){
-	  	if(msg_queue.length > 60){
-	  		// msg_queue.shift();
-	  		msg_queue = msg_queue.slice(msg_queue.length-45, msg_queue.length)
-	  	}
-	  }, 30*60*1000);
+	  // setInterval(function(){
+	  // 	if(msg_queue.length > 60){
+	  // 		// msg_queue.shift();
+	  // 		msg_queue = msg_queue.slice(msg_queue.length-45, msg_queue.length)
+	  // 	}
+	  // }, 30*60*1000);
 	});
 }
 
