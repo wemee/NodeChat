@@ -61,23 +61,23 @@
     };
 
     // init chatPanel 避免 chatPanel一開始是undefined
-    $scope.chatPanel = "<big>基地司令官&nbsp;說:&nbsp;歡迎加入秘密小隊</big>";
-    $scope.appendChat = function(talker, content, date){
-      if(!$scope.chatPanelElem) 
-        $scope.chatPanelElem = document.getElementById($scope.chatPanelDiv);
+    $scope.chatPanelContent = "<big>基地司令官&nbsp;說:&nbsp;歡迎加入秘密小隊</big>";
+    $scope.appendChatContent = function(talker, content, date){
+      if(!$scope.chatPanelDomElem) 
+        $scope.chatPanelDomElem = document.getElementById($scope.chatPanelDivId);
 
       var echo_msg = "<big>" + talker + "&nbsp;說:&nbsp;" + content + "</big><small>";
       echo_msg += "<i>&nbsp;at&nbsp;<time>" + date.getHours() + ":" + date.getMinutes() + "</time></i></small>";
       
-      $scope.chatPanel += '<br>'+echo_msg;
+      $scope.chatPanelContent += '<br>'+echo_msg;
 
-      $scope.chatPanelElem.scrollTop = $scope.chatPanelElem.scrollHeight;
+      $scope.chatPanelDomElem.scrollTop = $scope.chatPanelDomElem.scrollHeight;
     };
 
     // ECHO ~BACK~ HERE!!!
     socket.on('echo_back', function(data) {
       $scope.$apply(function(){
-        $scope.appendChat(data['name'], data['data'], new Date(data['date']));
+        $scope.appendChatContent(data['name'], data['data'], new Date(data['date']));
       });
 
       if(onblurBlinkCtr.is_onblur)
@@ -87,8 +87,8 @@
 
     // ECHO ~POST~ HERE!!!
     $scope.talk = function(){
-      socket.emit('echo_post', $scope.nickName, $scope.chat);
-      $scope.chat = "";
+      socket.emit('echo_post', $scope.nickName, $scope.userChatInput);
+      $scope.userChatInput = "";
       if(onblurBlinkCtr.is_onblur)
         onblurBlinkCtr.newExcitingAlerts();
     };
