@@ -1,4 +1,5 @@
 var fs = require('fs');
+var escape = require('escape-html');
 
 function create(server){
 	var io = require('socket.io').listen(server);
@@ -12,6 +13,7 @@ function create(server){
   };
 
   var emitAllMsgTo = function(socket){
+  	console.log(msg_queue);
   	for(var idx in msg_queue){
 	  	socket.emit('echo_back', msg_queue[idx]);
 	  }
@@ -35,11 +37,17 @@ function create(server){
 	  });
 
 	  socket.on('echo_post', function(name, data){
+	  	name = escape(name);
+	  	data = escape(data);
 	  	var date = new Date();
+	  	
 	  	console.log("A user echo post, socket id: [" + socket.id + "], name: [" + name + "], data" + ": [" + data + "]");
-	  	fs.appendFile('message.txt', data+"<br>", function (err) {});
+	  	fs.appendFile('message.txt', name + " 說:" + data + "\n", function (err) {
+	  		if(err) console.log('Write message.txt fail');
+	  	});
 
-	  	var echo_msg = "<big>" + name + "&nbsp;說:&nbsp;" + data + "</big><small><i>&nbsp;at&nbsp;<time>" + date.getHours() + ":" + date.getMinutes() + "</time></i></small>"
+	  	// var echo_msg = "<big>" + name + "&nbsp;說:&nbsp;" + data + "</big><small><i>&nbsp;at&nbsp;<time>" + date.getHours() + ":" + date.getMinutes() + "</time></i></small>"
+	  	var echo_msg = {'name':name, 'data':data, 'date': date};
 	  	io.sockets.emit("echo_back", echo_msg);
 	  	msg_queue.push(echo_msg);
 	  });

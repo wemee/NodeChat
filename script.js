@@ -9,7 +9,7 @@
 
   var app = angular.module('chat', ["ngSanitize"]);
 
-  app.value("socket", io.connect('http://10.0.21.67:8080/'));
+  app.value("socket", io.connect('http://10.0.11.67:8080/'));
 
   app.factory('onblurBlinkCtr', [function() {
     var onblurBlinkCtr = {};
@@ -59,19 +59,33 @@
     $scope.setNickName = function(){
       cookies.setCookie('nickName', $scope.nickName);
     };
-    // $scope.messages = [];
-    $scope.chatPanel = '<p>進入秘密基地</p>';
-    socket.on('echo_back', function(m) {
+
+    // init chatPanel 避免 chatPanel一開始是undefined
+    $scope.chatPanel = "<big>基地司令官&nbsp;說:&nbsp;歡迎加入秘密小隊</big>";
+    $scope.appendChat = function(talker, content, date){
+      if(!$scope.chatPanelElem) 
+        $scope.chatPanelElem = document.getElementById($scope.chatPanelDiv);
+
+      var echo_msg = "<big>" + talker + "&nbsp;說:&nbsp;" + content + "</big><small>";
+      echo_msg += "<i>&nbsp;at&nbsp;<time>" + date.getHours() + ":" + date.getMinutes() + "</time></i></small>";
+      
+      $scope.chatPanel += '<br>'+echo_msg;
+
+      $scope.chatPanelElem.scrollTop = $scope.chatPanelElem.scrollHeight;
+    };
+
+    // ECHO ~BACK~ HERE!!!
+    socket.on('echo_back', function(data) {
       $scope.$apply(function(){
-        $scope.chatPanel += '<br>'+m;
-        var elem = document.getElementById($scope.chatPanelDiv);
-        elem.scrollTop = elem.scrollHeight;
+        $scope.appendChat(data['name'], data['data'], new Date(data['date']));
       });
-      if(onblurBlinkCtr.is_onblur){
+
+      if(onblurBlinkCtr.is_onblur)
         onblurBlinkCtr.newExcitingAlerts();
-      }
     });
 
+
+    // ECHO ~POST~ HERE!!!
     $scope.talk = function(){
       socket.emit('echo_post', $scope.nickName, $scope.chat);
       $scope.chat = "";
