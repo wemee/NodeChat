@@ -13,7 +13,7 @@ function create(server){
   };
 
   var emitAllMsgTo = function(socket){
-  	console.log(msg_queue);
+  	// console.log(msg_queue);
   	for(var idx in msg_queue){
 	  	socket.emit('echo_back', msg_queue[idx]);
 	  }
@@ -25,7 +25,7 @@ function create(server){
 
 	io.sockets.on('connection', function(socket) {
 	  console.log("A user connected, socket id: " + socket.id);
-	  users[socket.id] = socket.handshake.address.address;
+	  users[socket.id] = socket.request.connection.remoteAddress;//socket.handshake.address.address;
 	  console.log(users);
 
 	  slimMsg();
@@ -40,7 +40,7 @@ function create(server){
 	  	name = escape(name);
 	  	data = escape(data);
 	  	var date = new Date();
-	  	
+
 	  	console.log("A user echo post, socket id: [" + socket.id + "], name: [" + name + "], data" + ": [" + data + "]");
 	  	fs.appendFile('message.txt', name + " 說:" + data + "\n", function (err) {
 	  		if(err) console.log('Write message.txt fail');
