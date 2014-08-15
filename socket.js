@@ -41,12 +41,11 @@ function create(server){
 	  	data = escape(data);
 	  	var date = new Date();
 
-	  	console.log("A user echo post, socket id: [" + socket.id + "], name: [" + name + "], data" + ": [" + data + "]");
+	  	console.log("A user echo post, remote ip: [" + users[socket.id] + "], name: [" + name + "], data" + ": [" + data + "]");
 	  	fs.appendFile('message.txt', name + " 說:" + data + "\n", function (err) {
 	  		if(err) console.log('Write message.txt fail');
 	  	});
-
-	  	// var echo_msg = "<big>" + name + "&nbsp;說:&nbsp;" + data + "</big><small><i>&nbsp;at&nbsp;<time>" + date.getHours() + ":" + date.getMinutes() + "</time></i></small>"
+	  	
 	  	var echo_msg = {'name':name, 'data':data, 'date': date};
 	  	io.sockets.emit("echo_back", echo_msg);
 	  	msg_queue.push(echo_msg);
